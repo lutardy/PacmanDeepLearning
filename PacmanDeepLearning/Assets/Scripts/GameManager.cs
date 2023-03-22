@@ -10,9 +10,12 @@ public class GameManager : MonoBehaviour
 
     public int score { get; private set; }
     public int ghostMultiplier = 1;
+    private Vector3 positionStart;
+
 
     private void Start()
     {
+        positionStart = this.pacman.gameObject.transform.position;
         NewGame();
     }
 
@@ -41,6 +44,7 @@ public class GameManager : MonoBehaviour
         }
 
         this.pacman.gameObject.SetActive(true);
+        this.pacman.gameObject.transform.position = positionStart;
     }
 
     private void GameOver()
@@ -52,8 +56,7 @@ public class GameManager : MonoBehaviour
 
         this.pacman.gameObject.SetActive(false);
 
-        UnityEditor.EditorApplication.isPlaying = false;
-        Application.Quit();
+        NewGame();
     }
 
     public void GhostEaten(Ghost ghost)
@@ -64,7 +67,6 @@ public class GameManager : MonoBehaviour
 
     public void PacmanEaten()
     {
-        Movement.stopMoving();
         GameOver();
     }
 

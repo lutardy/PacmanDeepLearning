@@ -8,22 +8,16 @@ public class Pacman : MonoBehaviour{
     
     public Movement movement { get; private set; }
     public bool isRotating { get; private set; }
-
     private void Awake(){
         this.movement = GetComponent<Movement>();
     }
 
     private void Update(){
+        Vector2[] directions = {
+            Vector2.up, Vector2.down, Vector2.left, Vector2.right
+        };
 
-        if (Input.GetKeyDown(KeyCode.UpArrow)){
-            this.movement.SetDirection(Vector2.up);
-        }else if (Input.GetKeyDown(KeyCode.DownArrow)){
-            this.movement.SetDirection(Vector2.down);
-        }else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-            this.movement.SetDirection(Vector2.left);
-        }else if (Input.GetKeyDown(KeyCode.RightArrow)){
-            this.movement.SetDirection(Vector2.right);
-        }
+        this.movement.SetDirection(directions[Random.Range(0, directions.Length)]);
 
         if (isRotating)
         {
