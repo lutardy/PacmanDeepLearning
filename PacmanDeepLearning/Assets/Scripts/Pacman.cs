@@ -12,20 +12,6 @@ public class Pacman : MonoBehaviour{
         this.movement = GetComponent<Movement>();
     }
 
-    private void Update(){
-        Vector2[] directions = {
-            Vector2.up, Vector2.down, Vector2.left, Vector2.right
-        };
-
-        this.movement.SetDirection(directions[Random.Range(0, directions.Length)]);
-
-        if (isRotating)
-        {
-            float angle = Mathf.Atan2(this.movement.currentDirection.y, this.movement.currentDirection.x);
-            this.transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
-        }
-    }
-
     public void ResetState()
     {
         this.gameObject.SetActive(true);

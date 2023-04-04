@@ -12,8 +12,10 @@ public class GameManager : MonoBehaviour
     public int ghostMultiplier = 1;
     private Vector3 positionStart;
 
+    public bool pacmanEaten = false;
 
-    private void Start()
+
+    public void Start()
     {
         positionStart = this.pacman.gameObject.transform.position;
         NewGame();
@@ -25,7 +27,7 @@ public class GameManager : MonoBehaviour
         NewRound();
     }
 
-    private void NewRound()
+    public void NewRound()
     {
         foreach (Transform pellets in this.pellets)
         {
@@ -45,6 +47,7 @@ public class GameManager : MonoBehaviour
 
         this.pacman.gameObject.SetActive(true);
         this.pacman.gameObject.transform.position = positionStart;
+        this.pacmanEaten = false;
     }
 
     private void GameOver()
@@ -67,6 +70,7 @@ public class GameManager : MonoBehaviour
 
     public void PacmanEaten()
     {
+        pacmanEaten = true;
         GameOver();
     }
 
