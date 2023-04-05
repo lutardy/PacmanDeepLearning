@@ -66,7 +66,6 @@ public class InternalAgent : Agent {
 		    } 
 		    else
 		    {
-                Debug.Log(lastState + " " + nextState + " " + action);
 		        q_table[lastState][action] += learning_rate * (reward + gamma * q_table[nextState].Max() - q_table[lastState][action]);
 		    }
         }

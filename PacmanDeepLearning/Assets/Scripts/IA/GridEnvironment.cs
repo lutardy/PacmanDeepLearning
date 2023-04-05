@@ -97,7 +97,7 @@ public class GridEnvironment : Environment
     /// <param name="action">Action.</param>
     public override void MiddleStep(int action)
     {
-        reward = -0.05f;
+        reward = 0.05f;
         // 0 - Forward, 1 - Backward, 2 - Left, 3 - Right
         if (action == 3)
         {
