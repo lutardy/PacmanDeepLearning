@@ -19,10 +19,15 @@ public class GameManager : MonoBehaviour
 
     public Text Speedtext;
 
+    public Text numberOfGameText;
+    public int numberOfGame;
+
+
     public void Start()
     {
         this.toggle = GameObject.Find("Toggle").GetComponent<Toggle>();
         positionStart = this.pacman.gameObject.transform.position;
+        numberOfGame = 0;
         NewGame();
     }
 
@@ -44,6 +49,8 @@ public class GameManager : MonoBehaviour
 
     private void NewGame()
     {
+        numberOfGame++;
+        numberOfGameText.text = "Game N° : " + numberOfGame.ToString();
         SetScore(0);
         NewRound();
     }
