@@ -12,8 +12,6 @@ public class Ghost : MonoBehaviour
     public GhostChase chase { get; private set; }
     public GhostFrightened frightened { get; private set; }
 
-    public Toggle toggle;
-
     public GhostBehavior initialBehavior;
 
     public Transform target;
@@ -26,20 +24,10 @@ public class Ghost : MonoBehaviour
         this.scatter = GetComponent<GhostScatter>();
         this.chase = GetComponent<GhostChase>();
         this.frightened = GetComponent<GhostFrightened>();
-        this.toggle = GameObject.Find("Toggle").GetComponent<Toggle>();
     }
 
     public void Start() {
         ResetState();
-    }
-
-    private void Update(){
-        if(toggle.isOn){
-            Time.timeScale = 30;
-        }
-        else{
-            Time.timeScale = 1;
-        }
     }
 
     public void ResetState() {

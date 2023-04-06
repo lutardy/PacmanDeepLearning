@@ -14,11 +14,32 @@ public class GameManager : MonoBehaviour
 
     public bool pacmanEaten = false;
 
+    public Toggle toggle;
+    public float SpeedUpValue = 1f;
+
+    public Text Speedtext;
 
     public void Start()
     {
+        this.toggle = GameObject.Find("Toggle").GetComponent<Toggle>();
         positionStart = this.pacman.gameObject.transform.position;
         NewGame();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown("up") && SpeedUpValue<64)
+           SpeedUpValue *= 2;
+
+        if (Input.GetKeyDown("down"))
+            SpeedUpValue *= 0.5f;
+
+        if(!toggle.isOn)
+            Time.timeScale = 1;
+        else
+            Time.timeScale = SpeedUpValue;
+
+        Speedtext.text = "X " + SpeedUpValue.ToString();
     }
 
     private void NewGame()

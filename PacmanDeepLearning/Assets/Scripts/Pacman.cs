@@ -10,25 +10,14 @@ public class Pacman : MonoBehaviour{
     public Movement movement { get; private set; }
     public bool isRotating { get; private set; }
 
-    public Toggle toggle;
     private void Awake(){
         this.movement = GetComponent<Movement>();
-        this.toggle = GameObject.Find("Toggle").GetComponent<Toggle>();
     }
 
     public void ResetState()
     {
         this.gameObject.SetActive(true);
         this.movement.ResetState();
-    }
-
-    private void Update(){
-        if(toggle.isOn){
-            Time.timeScale = 30;
-        }
-        else{
-            Time.timeScale = 1;
-        }
     }
 
     public void resetRotation()
