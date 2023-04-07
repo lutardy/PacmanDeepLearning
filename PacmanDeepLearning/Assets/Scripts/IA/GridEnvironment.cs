@@ -39,7 +39,7 @@ public class GridEnvironment : Environment
         envParameters = new EnvironmentParameters()
         {
             observation_size = 0,
-            state_size = 10000,
+            state_size = 16,
             action_descriptions = new List<string>() { "Up", "Down", "Left", "Right" },
             action_size = 4,
             env_name = "Pacman",
@@ -64,8 +64,33 @@ public class GridEnvironment : Environment
     {
         List<float> state = new List<float>();
 
-        float point = (26 * visualAgent.transform.position.x) + visualAgent.transform.position.y;
+        float point = 0;
+
+        if(Mathf.Abs(ghosts.First().transform.position.x - visualAgent.transform.position.x) > 1)
+        {
+            point += 1f;
+            if (ghosts.First().transform.position.x - visualAgent.transform.position.x > 0)
+            {
+                point += 2f;
+            }
+        }
+
+        if (Mathf.Abs(ghosts.First().transform.position.y - visualAgent.transform.position.y) > 1)
+        {
+            point += 4f;
+            if (ghosts.First().transform.position.y - visualAgent.transform.position.y > 0)
+            {
+                point += 8f;
+            }
+        }
+        
         state.Add(point);
+
+        reward = gameManager.reward;
+        if(gameManager.pacmanEaten || !gameManager.HasRemainingPellets() )
+            done = true;
+
+        Debug.Log(reward);
 
         return state;
     }
@@ -79,7 +104,7 @@ public class GridEnvironment : Environment
 
         ghosts = new List<Ghost>();
 
-        gameManager.NewRound();
+        gameManager.NewGame();
 
         visualAgent = gameManager.pacman;
 
@@ -118,19 +143,5 @@ public class GridEnvironment : Environment
         {
             visualAgent.movement.SetDirection(Vector2.down);
         }
-
-
-        if (gameManager.HasRemainingPellets() == false)
-        {
-            reward = 1;
-            done = true;
-        }
-        if (gameManager.pacmanEaten == true)
-        {
-            reward = -1;
-            done = true;
-        }
-
-        episodeReward += reward;
     }
 }

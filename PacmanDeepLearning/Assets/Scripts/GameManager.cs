@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     public Text numberOfGameText;
     public int numberOfGame;
 
+    public int reward;
+
 
     public void Start()
     {
@@ -47,9 +49,10 @@ public class GameManager : MonoBehaviour
         Speedtext.text = "X " + SpeedUpValue.ToString();
     }
 
-    private void NewGame()
+    public void NewGame()
     {
         numberOfGame++;
+        reward = 0;
         numberOfGameText.text = "Game N° : " + numberOfGame.ToString();
         SetScore(0);
         NewRound();
@@ -99,7 +102,8 @@ public class GameManager : MonoBehaviour
     public void PacmanEaten()
     {
         pacmanEaten = true;
-        GameOver();
+        reward = -1;
+        //GameOver();
     }
 
     public void SetScore(int score)
@@ -115,6 +119,7 @@ public class GameManager : MonoBehaviour
         if(!HasRemainingPellets())
         {
             // Tell IA it won
+            reward = 1;
             Movement.stopMoving();
             GameOver();
         }

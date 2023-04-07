@@ -28,7 +28,7 @@ public abstract class Environment : MonoBehaviour {
 	public string currentPythonCommand;
 	public bool skippingFrames;
 	public float[] actions;
-	public float waitTime;
+	public float waitTime = 0.05f;
 	public int episodeCount;
 	public bool humanControl;
 
@@ -77,6 +77,8 @@ public abstract class Environment : MonoBehaviour {
 		MiddleStep (sendAction);
 
 		StartCoroutine (WaitStep ());
+
+		Debug.Log("TakeAction");
 	}
 
 	public virtual void MiddleStep(int action) {
@@ -107,7 +109,8 @@ public abstract class Environment : MonoBehaviour {
 	}
 
 	public virtual void EndReset() {
-		agent.SendState (collectState(), reward, done);
+		List <float> state = collectState();
+		agent.SendState(state, reward, done);
 		skippingFrames = false;
 		acceptingSteps = true;
 		begun = true;
@@ -115,6 +118,9 @@ public abstract class Environment : MonoBehaviour {
 	}
 
 	public virtual void RunMdp() {
+
+		if ((Input.GetKeyDown("r")))
+			Reset();
 		if (acceptingSteps == true) {
 			if (done == false) {
 				Step ();

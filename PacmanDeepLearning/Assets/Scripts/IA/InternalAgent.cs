@@ -31,7 +31,7 @@ public class InternalAgent : Agent {
 	/// <returns>The action choosen by the agent's policy</returns>
 	public override float[] GetAction() {
         action = q_table[lastState].ToList().IndexOf(q_table[lastState].Max());
-        if (Random.Range(0f, 1f) < e) { action = Random.Range(0, 3); }
+        if (Random.Range(0f, 1f) < e) { action = Random.Range(0, 4); }
         if (e > eMin) { e = e - ((1f - eMin) / (float)annealingSteps); }
         float currentQ = q_table[lastState][action];
 		return new float[1] {action};
