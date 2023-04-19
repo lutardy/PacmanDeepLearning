@@ -228,11 +228,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4544482883684323927, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
       propertyPath: duration
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4544482883684323927, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8989482328884756303, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
+      propertyPath: duration
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9063088343779030355, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
       propertyPath: inside
@@ -242,6 +246,10 @@ PrefabInstance:
       propertyPath: outside
       value: 
       objectReference: {fileID: 46859003}
+    - target: {fileID: 9063088343779030355, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
+      propertyPath: duration
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
 --- !u!114 &6817406 stripped
@@ -377,7 +385,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db73e61d216df94b9272e72488fa12a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggle: {fileID: 0}
 --- !u!114 &106891380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6161,6 +6168,12 @@ MonoBehaviour:
   pellets: {fileID: 1344164579}
   ghostMultiplier: 1
   pacmanEaten: 0
+  toggle: {fileID: 0}
+  SpeedUpValue: 1
+  Speedtext: {fileID: 0}
+  numberOfGameText: {fileID: 0}
+  numberOfGame: 0
+  reward: 0
 --- !u!4 &2068429482
 Transform:
   m_ObjectHideFlags: 0

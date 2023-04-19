@@ -4,6 +4,31 @@ using UnityEngine.UI;
 using System.Linq;
 
 public class InternalAgent : Agent {
+
+    public class Replay
+    {
+        public List<double> states;
+        public double reward;
+
+        public Replay(double s, double r)
+        {
+            states = new List<double>();
+            states.Add(s);
+            reward = r;
+        }
+    }
+
+    ANN ann;
+    float reward = 0.0f;							//reward to associate with actions
+	List<Replay> replayMemory = new List<Replay>();	//memory - list of past actions and rewards
+	int mCapacity = 10000;							//memory capacity
+    List<double> qs = new List<double>();
+	
+	float discount = 0.99f;							//how much future states affect rewards
+	float maxExploreRate = 100.0f;					//max chance value
+    float minExploreRate = 0.01f;					//min chance value
+    float exploreDecay = 0.0001f;					//chance decay amount for each update
+
 	public float[][] q_table;	// The matrix containing the values estimates.
 	float learning_rate = 0.5f;	// The rate at which to update the value estimates given a reward.
 	int action = -1;
@@ -11,18 +36,11 @@ public class InternalAgent : Agent {
     float e = 1; // Initial epsilon value for random action selection.
     float eMin = 0.1f; // Lower bound of epsilon.
     int annealingSteps = 2000; // Number of steps to lower e to eMin.
-    int lastState;
+    double lastState;
 
 	public override void SendParameters (EnvironmentParameters env)
 	{
-        q_table = new float[env.state_size][];
-		action = 0;
-		for (int i = 0; i < env.state_size; i++) {
-			q_table [i] = new float[env.action_size];
-			for (int j = 0; j < env.action_size; j++) {
-				q_table [i] [j] = 0.0f;
-			}
-		}
+        ann = new ANN(1,4,1,6,0.2f);
 	}
 
 	/// <summary>
@@ -30,25 +48,29 @@ public class InternalAgent : Agent {
 	/// </summary>
 	/// <returns>The action choosen by the agent's policy</returns>
 	public override float[] GetAction() {
-        action = q_table[lastState].ToList().IndexOf(q_table[lastState].Max());
+        List<double> states = new List<double>();
+        states.Add(lastState);
+        qs = SoftMax(ann.CalcOutput(states));
+		double maxQ = qs.Max();
+		action = qs.ToList().IndexOf(maxQ);
+        
         if (Random.Range(0f, 1f) < e) { action = Random.Range(0, 4); }
         if (e > eMin) { e = e - ((1f - eMin) / (float)annealingSteps); }
-        float currentQ = q_table[lastState][action];
+
 		return new float[1] {action};
 	}
 
-    /// <summary>
+    /*/// <summary>
     /// Gets the values stored within the Q table.
     /// </summary>
     /// <returns>The average Q-values per state.</returns>
 	public override float[] GetValue() {
-        float[] value_table = new float[q_table.Length];
-        for (int i = 0; i < q_table.Length; i++)
+        for (int i = 0; i < qs.Length; i++)
         {
             value_table[i] = q_table[i].Average();
         }
 		return value_table;
-	}
+	}*/
 
     /// <summary>
     /// Updates the value estimate matrix given a new experience (state, action, reward).
@@ -58,17 +80,54 @@ public class InternalAgent : Agent {
     /// <param name="done">Whether the episode has ended</param>
     public override void SendState(List<float> state, float reward, bool done)
     {
-        int nextState = Mathf.FloorToInt(state.First());
+        Replay lastMemory = new Replay(state.First(), reward);
+
+		if(replayMemory.Count > mCapacity)
+			replayMemory.RemoveAt(0);
+		
+		replayMemory.Add(lastMemory);
+
+        double nextState = state.First();
         if (action != -1) {
-		    if (done == true)
-		    {
-		        q_table[lastState][action] += learning_rate * (reward - q_table[lastState][action]);
-		    } 
-		    else
-		    {
-		        q_table[lastState][action] += learning_rate * (reward + gamma * q_table[nextState].Max() - q_table[lastState][action]);
-		    }
-        }
+		    for(int i = replayMemory.Count - 1; i >= 0; i--)
+			{
+				List<double> toutputsOld = new List<double>();
+				List<double> toutputsNew = new List<double>();
+				toutputsOld = SoftMax(ann.CalcOutput(replayMemory[i].states));	
+
+				double maxQOld = toutputsOld.Max();
+				int action = toutputsOld.ToList().IndexOf(maxQOld);
+
+			    double feedback;
+				if(i == replayMemory.Count-1 || replayMemory[i].reward == -1)
+					feedback = replayMemory[i].reward;
+				else
+				{
+					toutputsNew = SoftMax(ann.CalcOutput(replayMemory[i+1].states));
+					double maxQ = toutputsNew.Max();
+					feedback = (replayMemory[i].reward + 
+						discount * maxQ);
+				} 
+
+				toutputsOld[action] = feedback;
+				ann.Train(replayMemory[i].states,toutputsOld);
+			}
+		}	
         lastState = nextState;
 	}
+
+    List<double> SoftMax(List<double> values) 
+    {
+      double max = values.Max();
+
+      float scale = 0.0f;
+      for (int i = 0; i < values.Count; ++i)
+        scale += Mathf.Exp((float)(values[i] - max));
+
+      List<double> result = new List<double>();
+      for (int i = 0; i < values.Count; ++i)
+        result.Add(Mathf.Exp((float)(values[i] - max)) / scale);
+
+      return result; 
+    }
 }
