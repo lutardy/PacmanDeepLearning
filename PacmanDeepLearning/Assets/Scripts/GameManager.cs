@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
 
     public int score { get; private set; }
     public int ghostMultiplier = 1;
+
+    public bool ghostEatable = false;
+
     private Vector3 positionStart;
 
     public bool pacmanEaten = false;
@@ -132,6 +135,8 @@ public class GameManager : MonoBehaviour
             this.ghosts[i].frightened.Enable(pellet.duration);
         }
 
+        ghostEatable = true;
+
         CancelInvoke();
         Invoke(nameof(ResetGhostMultiplier), 3.0f);
         PelletEaten(pellet);
@@ -150,5 +155,6 @@ public class GameManager : MonoBehaviour
     public void ResetGhostMultiplier()
     {
        ghostMultiplier = 1;
+       ghostEatable = false;
     }
 }

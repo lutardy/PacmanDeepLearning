@@ -28,7 +28,7 @@ public abstract class Environment : MonoBehaviour {
 	public string currentPythonCommand;
 	public bool skippingFrames;
 	public float[] actions;
-	public float waitTime = 0.05f;
+	public float waitTime = 0.01f;
 	public int episodeCount;
 	public bool humanControl;
 
@@ -78,7 +78,7 @@ public abstract class Environment : MonoBehaviour {
 
 		StartCoroutine (WaitStep ());
 
-		Debug.Log("TakeAction");
+		//Debug.Log("TakeAction");
 	}
 
 	public virtual void MiddleStep(int action) {

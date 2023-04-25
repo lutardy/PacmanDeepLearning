@@ -9,8 +9,8 @@ public class InternalAgent : Agent {
 	int action = -1;
     float gamma = 0.99f; // Discount factor for calculating Q-target.
     float e = 1; // Initial epsilon value for random action selection.
-    float eMin = 0.1f; // Lower bound of epsilon.
-    int annealingSteps = 2000; // Number of steps to lower e to eMin.
+    float eMin = 0.05f; // Lower bound of epsilon.
+    int annealingSteps = 20000; // Number of steps to lower e to eMin.
     int lastState;
 
 	public override void SendParameters (EnvironmentParameters env)

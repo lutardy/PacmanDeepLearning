@@ -39,7 +39,7 @@ public class GridEnvironment : Environment
         envParameters = new EnvironmentParameters()
         {
             observation_size = 0,
-            state_size = 16,
+            state_size = 512,
             action_descriptions = new List<string>() { "Up", "Down", "Left", "Right" },
             action_size = 4,
             env_name = "Pacman",
@@ -65,32 +65,76 @@ public class GridEnvironment : Environment
         List<float> state = new List<float>();
 
         float point = 0;
+        /*
+         * if (Mathf.Abs(ghosts.First().transform.position.x - visualAgent.transform.position.x) > 5) //Loin ou non
+        {
+            point += 256f;
+            if (ghosts.First().transform.position.x - visualAgent.transform.position.x > 0) // Droite ou Gauche
+            {
+                point += 256f;
+            }
 
-        if(Mathf.Abs(ghosts.First().transform.position.x - visualAgent.transform.position.x) > 1)
+        }
+        else if (Mathf.Abs(ghosts.First().transform.position.x - visualAgent.transform.position.x) > 1) // Neutre ou Non
         {
             point += 1f;
-            if (ghosts.First().transform.position.x - visualAgent.transform.position.x > 0)
+            if (ghosts.First().transform.position.x - visualAgent.transform.position.x > 0) // Droite ou Gauche
             {
-                point += 2f;
+                point += 1f;
             }
         }
 
-        if (Mathf.Abs(ghosts.First().transform.position.y - visualAgent.transform.position.y) > 1)
+        if (Mathf.Abs(ghosts.First().transform.position.y - visualAgent.transform.position.y) > 5)
         {
             point += 4f;
             if (ghosts.First().transform.position.y - visualAgent.transform.position.y > 0)
             {
-                point += 8f;
+                point += 4f;
             }
         }
-        
+        else if (Mathf.Abs(ghosts.First().transform.position.y - visualAgent.transform.position.y) > 1)
+        {
+            point += 1024f;
+            if (ghosts.First().transform.position.y - visualAgent.transform.position.y > 0)
+            {
+                point += 1024f;
+            }
+        }
+
+        */
+
+        int obstacleLayer = visualAgent.GetComponent<Movement>().obstacleLayer;
+        int ghostLayer = ghosts[0].gameObject.layer;
+
+        if (Physics2D.OverlapArea(visualAgent.LeftU.position,visualAgent.LeftD.position, ghostLayer))
+            point += 1f;
+        if (Physics2D.OverlapArea(visualAgent.RightU.position,visualAgent.RightD.position, ghostLayer))
+            point += 2f;
+        if (Physics2D.OverlapArea(visualAgent.DownR.position,visualAgent.DownL.position, ghostLayer))
+            point += 4f;
+        if (Physics2D.OverlapArea(visualAgent.UpR.position,visualAgent.UpL.position, ghostLayer))
+            point += 8f;
+
+        if (Physics2D.OverlapArea(visualAgent.LeftU.position, visualAgent.LeftD.position, obstacleLayer))
+            point += 16f;
+        if (Physics2D.OverlapArea(visualAgent.RightU.position, visualAgent.RightD.position, obstacleLayer))
+            point += 32f;
+        if (Physics2D.OverlapArea(visualAgent.DownR.position, visualAgent.DownL.position, obstacleLayer))
+            point += 64f;
+        if (Physics2D.OverlapArea(visualAgent.UpR.position, visualAgent.UpL.position, obstacleLayer))
+            point += 128f;
+
+        if (gameManager.ghostEatable)
+            point += 256f;
+
+        //point = visualAgent.gameObject.transform.position.x - 12 + (visualAgent.gameObject.transform.position.y -10) * 30;
+       // point += 450 * (ghosts[0].transform.position.x - 12 + (ghosts[0].transform.position.y - 10) * 30);
+
         state.Add(point);
 
         reward = gameManager.reward;
         if(gameManager.pacmanEaten || !gameManager.HasRemainingPellets() )
             done = true;
-
-        Debug.Log(reward);
 
         return state;
     }
