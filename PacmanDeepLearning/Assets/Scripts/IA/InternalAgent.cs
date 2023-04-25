@@ -10,10 +10,12 @@ public class InternalAgent : Agent {
         public List<double> states;
         public double reward;
 
-        public Replay(double s, double r)
+        public Replay(List<float> s, double r)
         {
             states = new List<double>();
-            states.Add(s);
+            foreach(float st in s){
+                states.Add((double)st);
+            }
             reward = r;
         }
     }
@@ -21,7 +23,7 @@ public class InternalAgent : Agent {
     ANN ann;
     float reward = 0.0f;							//reward to associate with actions
 	List<Replay> replayMemory = new List<Replay>();	//memory - list of past actions and rewards
-	int mCapacity = 10000;							//memory capacity
+	int mCapacity = 100;							//memory capacity
     List<double> qs = new List<double>();
 	
 	float discount = 0.99f;							//how much future states affect rewards
@@ -36,11 +38,11 @@ public class InternalAgent : Agent {
     float e = 1; // Initial epsilon value for random action selection.
     float eMin = 0.1f; // Lower bound of epsilon.
     int annealingSteps = 2000; // Number of steps to lower e to eMin.
-    double lastState;
+    List<float> lastState;
 
 	public override void SendParameters (EnvironmentParameters env)
 	{
-        ann = new ANN(1,4,1,6,0.2f);
+        ann = new ANN(4,4,1,6,0.2f);
 	}
 
 	/// <summary>
@@ -49,7 +51,9 @@ public class InternalAgent : Agent {
 	/// <returns>The action choosen by the agent's policy</returns>
 	public override float[] GetAction() {
         List<double> states = new List<double>();
-        states.Add(lastState);
+        foreach(float state in lastState){
+            states.Add((double)state);
+        }
         qs = SoftMax(ann.CalcOutput(states));
 		double maxQ = qs.Max();
 		action = qs.ToList().IndexOf(maxQ);
@@ -80,15 +84,14 @@ public class InternalAgent : Agent {
     /// <param name="done">Whether the episode has ended</param>
     public override void SendState(List<float> state, float reward, bool done)
     {
-        Replay lastMemory = new Replay(state.First(), reward);
+        Replay lastMemory = new Replay(state, reward);
 
 		if(replayMemory.Count > mCapacity)
 			replayMemory.RemoveAt(0);
 		
 		replayMemory.Add(lastMemory);
 
-        double nextState = state.First();
-        if (action != -1) {
+        if (reward == -1) {
 		    for(int i = replayMemory.Count - 1; i >= 0; i--)
 			{
 				List<double> toutputsOld = new List<double>();
@@ -113,7 +116,7 @@ public class InternalAgent : Agent {
 				ann.Train(replayMemory[i].states,toutputsOld);
 			}
 		}	
-        lastState = nextState;
+        lastState = state;
 	}
 
     List<double> SoftMax(List<double> values) 

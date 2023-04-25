@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     public bool ghostEatable = false;
 
-    private Vector3 positionStart;
+    public Vector3 positionStart;
 
     public bool pacmanEaten = false;
 
@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        Application.runInBackground = true;
         this.toggle = GameObject.Find("Toggle").GetComponent<Toggle>();
         positionStart = this.pacman.gameObject.transform.position;
         numberOfGame = 0;
@@ -56,7 +57,7 @@ public class GameManager : MonoBehaviour
     {
         numberOfGame++;
         reward = 0;
-        numberOfGameText.text = "Game N° : " + numberOfGame.ToString();
+        numberOfGameText.text = "Game Nï¿½ : " + numberOfGame.ToString();
         SetScore(0);
         NewRound();
     }
@@ -144,12 +145,26 @@ public class GameManager : MonoBehaviour
 
     public bool HasRemainingPellets()
     {
+        return NbPelletRemaining() != 0;
+    }
+
+    public int nbPellet(){
+        int nbPellet = 0;
+        foreach (Transform pellets in this.pellets)
+        {
+            nbPellet++;   
+        }
+        return nbPellet;
+    }
+
+    public int NbPelletRemaining(){
+        int nbPellet = 0;
         foreach (Transform pellets in this.pellets)
         {
             if (pellets.gameObject.activeSelf)
-                return true;   
+                nbPellet++;   
         }
-        return false;
+        return nbPellet;
     }
 
     public void ResetGhostMultiplier()
