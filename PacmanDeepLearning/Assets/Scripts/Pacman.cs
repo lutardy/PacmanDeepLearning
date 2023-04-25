@@ -10,6 +10,15 @@ public class Pacman : MonoBehaviour{
     public Movement movement { get; private set; }
     public bool isRotating { get; private set; }
 
+    public Transform LeftU;
+    public Transform RightU;
+    public Transform UpR;
+    public Transform DownR;
+    public Transform LeftD;
+    public Transform RightD;
+    public Transform UpL;
+    public Transform DownL;
+
     private void Awake(){
         this.movement = GetComponent<Movement>();
     }
