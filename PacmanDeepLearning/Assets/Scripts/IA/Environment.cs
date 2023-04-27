@@ -120,8 +120,6 @@ public abstract class Environment : MonoBehaviour {
 	}
 
 	public virtual void RunMdp() {
-		if ((Input.GetKeyDown("r")))
-			Reset();
 		
 			if (done == false) {
 				Step ();

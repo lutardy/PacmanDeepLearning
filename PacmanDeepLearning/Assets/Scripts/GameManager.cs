@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown("up") && SpeedUpValue<64)
            SpeedUpValue *= 2;
 
-        if (Input.GetKeyDown("down"))
+        if (Input.GetKeyDown("down") && SpeedUpValue > 0.5)
             SpeedUpValue *= 0.5f;
 
         if(!toggle.isOn)
@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
     {
         pacmanEaten = true;
         reward = -1;
-        GameOver();
+        //GameOver();
         gridEnvironment.Reset();
         
     }
@@ -132,8 +132,9 @@ public class GameManager : MonoBehaviour
         {
             // Tell IA it won
             reward = 1;
+            gameWon++;
             //Movement.stopMoving();
-            GameOver();
+            //GameOver();
             gridEnvironment.Reset();
         }
     }
@@ -153,9 +154,7 @@ public class GameManager : MonoBehaviour
     }
 
     public bool HasRemainingPellets()
-    {
-        if(NbPelletRemaining() == 0)
-            gameWon++;
+    {            
         return NbPelletRemaining() != 0;
     }
 

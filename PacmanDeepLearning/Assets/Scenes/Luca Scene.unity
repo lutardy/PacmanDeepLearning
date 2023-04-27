@@ -468,7 +468,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4190268061661215070, guid: 60c2cbf6aed9a6346943ae17427be443, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 29.597485
+      value: 29.09
       objectReference: {fileID: 0}
     - target: {fileID: 4190268061661215070, guid: 60c2cbf6aed9a6346943ae17427be443, type: 3}
       propertyPath: m_LocalPosition.y
@@ -586,7 +586,7 @@ MonoBehaviour:
   RightD: {fileID: 1442869118}
   UpL: {fileID: 2082089922}
   DownL: {fileID: 920541912}
-  collidingNode: 1
+  collidingNode: 0
   currentNode: {fileID: 2045086559}
 --- !u!114 &679538734
 MonoBehaviour:
@@ -2723,7 +2723,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1256664519499729054, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
       propertyPath: duration
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2006790767534813458, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
       propertyPath: m_IsActive
@@ -2819,7 +2819,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4544482883684323927, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
       propertyPath: duration
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4544482883684323927, guid: f1ae53198131c32449a9f3dc2b5416f7, type: 3}
       propertyPath: m_Enabled

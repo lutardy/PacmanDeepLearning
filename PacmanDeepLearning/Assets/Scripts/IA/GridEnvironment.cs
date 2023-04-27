@@ -59,6 +59,8 @@ public class GridEnvironment : Environment
     // Update is called once per frame
     void Update()
     {
+        if ((Input.GetKeyDown("r")))
+			Reset();
         if(gameManager.pacman.collidingNode)
             RunMdp();
     }
@@ -156,13 +158,13 @@ public class GridEnvironment : Environment
             int random = Random.Range(0, 4);
             Vector2 direction = Vector2.up;
             if(random == 0)
-                    direction = Vector2.up;
-                if(random == 1)
-                    direction = Vector2.down;
-                if(random == 2)
-                    direction = Vector2.left;
-                if(random == 3)
-                    direction = Vector2.right;
+                direction = Vector2.up;
+            if(random == 1)
+                direction = Vector2.down;
+            if(random == 2)
+                direction = Vector2.left;
+            if(random == 3)
+                direction = Vector2.right;
             if(gameManager.pacman.currentNode.availableDirections.Contains(direction))
                 newDirection = direction;
         }
