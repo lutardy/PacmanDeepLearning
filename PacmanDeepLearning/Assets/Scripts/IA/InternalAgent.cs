@@ -32,7 +32,7 @@ public class InternalAgent : Agent {
     float exploreDecay = 0.0001f;					//chance decay amount for each update
 
 	public float[][] q_table;	// The matrix containing the values estimates.
-	float learning_rate = 0.1f;	// The rate at which to update the value estimates given a reward.
+	float learning_rate = 0.01f;	// The rate at which to update the value estimates given a reward.
 	int action = -1;
     float gamma = 0.99f; // Discount factor for calculating Q-target.
     float e = 1; // Initial epsilon value for random action selection.
@@ -42,7 +42,7 @@ public class InternalAgent : Agent {
 
 	public override void SendParameters (EnvironmentParameters env)
 	{
-        ann = new ANN(6,4,2,2,0.2f);
+        ann = new ANN(10,4,2,2,0.2f);
 	}
 
 	/// <summary>
@@ -85,6 +85,8 @@ public class InternalAgent : Agent {
     /// <param name="done">Whether the episode has ended</param>
     public override void SendState(List<float> state, float reward, bool done)
     {
+        if(reward == -1)
+            Debug.Log("mort");
         Replay lastMemory = new Replay(state, reward);
 
 		if(replayMemory.Count > mCapacity)

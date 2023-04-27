@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour
         pacmanEaten = true;
         reward = -1;
         //GameOver();
+        gridEnvironment.reward = -1;
         gridEnvironment.Reset();
         
     }
@@ -135,7 +136,9 @@ public class GameManager : MonoBehaviour
             gameWon++;
             //Movement.stopMoving();
             //GameOver();
+            gridEnvironment.reward = 1;
             gridEnvironment.Reset();
+
         }
     }
 

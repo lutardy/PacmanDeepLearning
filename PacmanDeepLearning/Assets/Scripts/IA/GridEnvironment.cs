@@ -11,7 +11,11 @@ public class GridEnvironment : Environment
     float episodeReward;
     public GameManager gameManager;
 
+    public LayerMask pelletLayer;
+
     Vector3 lastPosition;
+
+    public Node currentNode;
     
     int nbPellets;
 
@@ -22,6 +26,7 @@ public class GridEnvironment : Environment
         BeginNewGame();
         lastPosition = gameManager.positionStart;
         nbPellets = gameManager.nbPellet();
+        currentNode = gameManager.pacman.currentNode;
     }
 
     /// <summary>
@@ -61,8 +66,10 @@ public class GridEnvironment : Environment
     {
         if ((Input.GetKeyDown("r")))
 			Reset();
-        if(gameManager.pacman.collidingNode)
+        if(gameManager.pacman.currentNode != currentNode){
             RunMdp();
+            currentNode = gameManager.pacman.currentNode;
+        }
     }
 
     /// <summary>
@@ -86,6 +93,41 @@ public class GridEnvironment : Environment
 
         states.Add(gameManager.NbPelletRemaining());
 
+        RaycastHit2D hit = Physics2D.BoxCast(gameManager.pacman.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.up, 1.0f, this.pelletLayer);
+        if (hit.collider == null)
+        {
+            states.Add(0);
+        }
+        else{
+            states.Add(0);
+        }
+
+        hit = Physics2D.BoxCast(gameManager.pacman.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.down, 1.0f, this.pelletLayer);
+        if (hit.collider == null)
+        {
+            states.Add(0);
+        }
+        else{
+            states.Add(0);
+        }
+
+        hit = Physics2D.BoxCast(gameManager.pacman.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.left, 1.0f, this.pelletLayer);
+        if (hit.collider == null)
+        {
+            states.Add(0);
+        }
+        else{
+            states.Add(0);
+        }
+
+        hit = Physics2D.BoxCast(gameManager.pacman.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.right, 1.0f, this.pelletLayer);
+        if (hit.collider == null)
+        {
+            states.Add(0);
+        }
+        else{
+            states.Add(0);
+        }
         /*float direction = 0;
 
         if(this.gameManager.pacman.movement.currentDirection == Vector2.right)
@@ -101,9 +143,9 @@ public class GridEnvironment : Environment
         states.Add(direction);*/
 
         if(gameManager.NbPelletRemaining() < nbPellets)
-            reward = 0.2f;
-        else
-            reward = -0.1f;
+            reward = 0.1f;
+        /*else
+            reward = -0.1f;*/
 
         nbPellets = gameManager.NbPelletRemaining();
 
@@ -116,6 +158,7 @@ public class GridEnvironment : Environment
         }
 
         if(gameManager.pacmanEaten || !gameManager.HasRemainingPellets() ){
+            done = true;
             Reset();
         }
 
@@ -152,8 +195,6 @@ public class GridEnvironment : Environment
     {
         Vector2 newDirection = new Vector2(0, 0);
 
-        int obstacleLayer = visualAgent.GetComponent<Movement>().obstacleLayer;
-
         while(newDirection.x == 0 && newDirection.y == 0){
             int random = Random.Range(0, 4);
             Vector2 direction = Vector2.up;
@@ -176,7 +217,7 @@ public class GridEnvironment : Environment
         {
             if(!gameManager.pacman.currentNode.availableDirections.Contains(Vector2.right)){
                 visualAgent.movement.SetDirection(newDirection);
-                reward = -0.1f;
+                //reward = -0.1f;
             }
                 
             else  
@@ -187,7 +228,7 @@ public class GridEnvironment : Environment
         {
             if(!gameManager.pacman.currentNode.availableDirections.Contains(Vector2.left)){
                 visualAgent.movement.SetDirection(newDirection);
-                reward = -0.1f;
+                //reward = -0.1f;
             }
             else 
                 visualAgent.movement.SetDirection(Vector2.left);
@@ -197,7 +238,7 @@ public class GridEnvironment : Environment
         {
             if(!gameManager.pacman.currentNode.availableDirections.Contains(Vector2.up)){
                 visualAgent.movement.SetDirection(newDirection);
-                reward = -0.1f;
+                //reward = -0.1f;
             }
             else 
                 visualAgent.movement.SetDirection(Vector2.up);
@@ -207,7 +248,7 @@ public class GridEnvironment : Environment
         {
             if(!gameManager.pacman.currentNode.availableDirections.Contains(Vector2.down)){
                 visualAgent.movement.SetDirection(newDirection);
-                reward = -0.1f;
+                //reward = -0.1f;
             }
             else 
                 visualAgent.movement.SetDirection(Vector2.down);

@@ -28,9 +28,11 @@ public abstract class Environment : MonoBehaviour {
 	public string currentPythonCommand;
 	public bool skippingFrames;
 	public float[] actions;
-	public float waitTime = 0.01f;
+	public float waitTime = 0.1f;
 	public int episodeCount;
 	public bool humanControl;
+
+	List<float> state;
 
 	public int bumper;
 
@@ -63,6 +65,8 @@ public abstract class Environment : MonoBehaviour {
 	}
 		
 	public virtual void Step() {
+		if(state != null)
+			agent.SendState (state, reward, done);
 		acceptingSteps = false;
 		currentStep += 1;
 		if (currentStep >= maxSteps) {
@@ -70,7 +74,8 @@ public abstract class Environment : MonoBehaviour {
 		}
 
 		reward = 0;
-		actions = agent.GetAction (collectState());
+		state = collectState();
+		actions = agent.GetAction (state);
 		framesSinceAction = 0;
 
 		int sendAction = Mathf.FloorToInt(actions [0]);
@@ -96,12 +101,13 @@ public abstract class Environment : MonoBehaviour {
 	}
 
 	public virtual void EndStep() {
-		agent.SendState (collectState(), reward, done);
 		skippingFrames = false;
 		acceptingSteps = true;
 	}
 
 	public virtual void Reset() {
+		if(state != null)
+			agent.SendState (state, reward, done);
 		agent.Train();
 		reward = 0;
 		currentStep = 0;

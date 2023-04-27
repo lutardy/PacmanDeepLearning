@@ -586,7 +586,6 @@ MonoBehaviour:
   RightD: {fileID: 1442869118}
   UpL: {fileID: 2082089922}
   DownL: {fileID: 920541912}
-  collidingNode: 0
   currentNode: {fileID: 2045086559}
 --- !u!114 &679538734
 MonoBehaviour:
@@ -3170,6 +3169,7 @@ MonoBehaviour:
   - {fileID: 1419606505}
   visualAgent: {fileID: 679538733}
   gameManager: {fileID: 1477312994}
+  currentNode: {fileID: 0}
 --- !u!156049354 &1597730589
 Grid:
   m_ObjectHideFlags: 0

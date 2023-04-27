@@ -19,15 +19,10 @@ public class Pacman : MonoBehaviour{
     public Transform UpL;
     public Transform DownL;
 
-    public bool collidingNode = false;
     public Node currentNode;
 
     private void Awake(){
         this.movement = GetComponent<Movement>();
-    }
-
-    public void Update(){
-        collidingNode = false;
     }
 
     public void ResetState()
@@ -57,7 +52,6 @@ public class Pacman : MonoBehaviour{
 
         if (node != null && this.enabled)
         {
-            collidingNode = true;
             currentNode = node;
         }
     }
