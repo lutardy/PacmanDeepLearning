@@ -34,7 +34,7 @@ public class GridEnvironment : Environment
         agent = new InternalAgent();
         agent.SendParameters(envParameters);
         Reset();
-
+        RunMdp();
     }
 
     /// <summary>
@@ -59,7 +59,8 @@ public class GridEnvironment : Environment
     // Update is called once per frame
     void Update()
     {
-        RunMdp();
+        if(gameManager.pacman.collidingNode)
+            RunMdp();
     }
 
     /// <summary>
@@ -76,6 +77,13 @@ public class GridEnvironment : Environment
         states.Add(this.gameManager.ghosts.First().transform.position.x);
         states.Add(this.gameManager.ghosts.First().transform.position.y);
 
+        if(this.gameManager.ghostEatable)
+            states.Add(1);
+        else
+            states.Add(0);
+
+        states.Add(gameManager.NbPelletRemaining());
+
         /*float direction = 0;
 
         if(this.gameManager.pacman.movement.currentDirection == Vector2.right)
@@ -91,7 +99,9 @@ public class GridEnvironment : Environment
         states.Add(direction);*/
 
         if(gameManager.NbPelletRemaining() < nbPellets)
-            reward = 0.1f;
+            reward = 0.2f;
+        else
+            reward = -0.1f;
 
         nbPellets = gameManager.NbPelletRemaining();
 
@@ -103,8 +113,9 @@ public class GridEnvironment : Environment
             reward = 1;
         }
 
-        if(gameManager.pacmanEaten || !gameManager.HasRemainingPellets() )
-            done = true;
+        if(gameManager.pacmanEaten || !gameManager.HasRemainingPellets() ){
+            Reset();
+        }
 
         return states;
     }
@@ -128,6 +139,7 @@ public class GridEnvironment : Environment
 
         episodeReward = 0;
         EndReset();
+        RunMdp();
     }
 
     /// <summary>
@@ -136,30 +148,71 @@ public class GridEnvironment : Environment
     /// <param name="action">Action.</param>
     public override void MiddleStep(int action)
     {
-        reward = 0.05f;
+        Vector2 newDirection = new Vector2(0, 0);
+
+        int obstacleLayer = visualAgent.GetComponent<Movement>().obstacleLayer;
+
+        while(newDirection.x == 0 && newDirection.y == 0){
+            int random = Random.Range(0, 4);
+            Vector2 direction = Vector2.up;
+            if(random == 0)
+                    direction = Vector2.up;
+                if(random == 1)
+                    direction = Vector2.down;
+                if(random == 2)
+                    direction = Vector2.left;
+                if(random == 3)
+                    direction = Vector2.right;
+            if(gameManager.pacman.currentNode.availableDirections.Contains(direction))
+                newDirection = direction;
+        }
+        //Debug.Log(action);
+        //Debug.Log(newDirection);
+
         // 0 - Forward, 1 - Backward, 2 - Left, 3 - Right
         if (action == 3)
         {
-            visualAgent.movement.SetDirection(Vector2.right);
+            if(!gameManager.pacman.currentNode.availableDirections.Contains(Vector2.right)){
+                visualAgent.movement.SetDirection(newDirection);
+                reward = -0.1f;
+            }
+                
+            else  
+                visualAgent.movement.SetDirection(Vector2.right);
         }
 
         if (action == 2)
         {
-            visualAgent.movement.SetDirection(Vector2.left);
+            if(!gameManager.pacman.currentNode.availableDirections.Contains(Vector2.left)){
+                visualAgent.movement.SetDirection(newDirection);
+                reward = -0.1f;
+            }
+            else 
+                visualAgent.movement.SetDirection(Vector2.left);
         }
 
         if (action == 0)
         {
-            visualAgent.movement.SetDirection(Vector2.up);
+            if(!gameManager.pacman.currentNode.availableDirections.Contains(Vector2.up)){
+                visualAgent.movement.SetDirection(newDirection);
+                reward = -0.1f;
+            }
+            else 
+                visualAgent.movement.SetDirection(Vector2.up);
         }
 
         if (action == 1)
         {
-            visualAgent.movement.SetDirection(Vector2.down);
+            if(!gameManager.pacman.currentNode.availableDirections.Contains(Vector2.down)){
+                visualAgent.movement.SetDirection(newDirection);
+                reward = -0.1f;
+            }
+            else 
+                visualAgent.movement.SetDirection(Vector2.down);
         }
-        if(visualAgent.transform.position == lastPosition){
+        /*if(visualAgent.transform.position.x == lastPosition.x && visualAgent.transform.position.y == lastPosition.y){
             reward = -0.5f;
-        }
+        }*/
         lastPosition = visualAgent.transform.position;
     }
 }

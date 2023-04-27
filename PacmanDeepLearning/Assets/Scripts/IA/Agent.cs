@@ -9,7 +9,7 @@ public class Agent {
 		return "";
 	}
 
-	public virtual float[] GetAction() {
+	public virtual float[] GetAction(List<float> state) {
 		return new float[1] { 0.0f };
 	}
 
@@ -20,5 +20,9 @@ public class Agent {
 		
 	public virtual void SendState(List<float> state, float reward, bool d) {
 
+	}
+
+	public virtual void Train(){
+		
 	}
 }

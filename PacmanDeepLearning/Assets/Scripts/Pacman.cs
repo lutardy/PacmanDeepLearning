@@ -19,8 +19,15 @@ public class Pacman : MonoBehaviour{
     public Transform UpL;
     public Transform DownL;
 
+    public bool collidingNode = false;
+    public Node currentNode;
+
     private void Awake(){
         this.movement = GetComponent<Movement>();
+    }
+
+    public void Update(){
+        collidingNode = false;
     }
 
     public void ResetState()
@@ -43,4 +50,25 @@ public class Pacman : MonoBehaviour{
     {
         this.isRotating = true;
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Node node = other.GetComponent<Node>();
+
+        if (node != null && this.enabled)
+        {
+            collidingNode = true;
+            currentNode = node;
+        }
+    }
+
+    /*private void OnTriggerExit2D(Collider2D other)
+    {
+        Node node = other.GetComponent<Node>();
+
+        if (node != null && this.enabled)
+        {
+            collidingNode = false;
+        }
+    }*/
 }

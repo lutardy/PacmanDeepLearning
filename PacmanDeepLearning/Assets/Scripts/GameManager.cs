@@ -27,13 +27,18 @@ public class GameManager : MonoBehaviour
 
     public int reward;
 
+    public Text numberOfGameWon;
+    public int gameWon = 0;
+
+    public GridEnvironment gridEnvironment;
+
 
     public void Start()
     {
         Application.runInBackground = true;
         this.toggle = GameObject.Find("Toggle").GetComponent<Toggle>();
         positionStart = this.pacman.gameObject.transform.position;
-        numberOfGame = 0;
+        numberOfGame = -1;
         NewGame();
     }
 
@@ -57,7 +62,8 @@ public class GameManager : MonoBehaviour
     {
         numberOfGame++;
         reward = 0;
-        numberOfGameText.text = "Game N� : " + numberOfGame.ToString();
+        numberOfGameText.text = "Game N° : " + numberOfGame.ToString();
+        numberOfGameWon.text = "Game Won : " + gameWon.ToString();
         SetScore(0);
         NewRound();
     }
@@ -94,7 +100,7 @@ public class GameManager : MonoBehaviour
 
         this.pacman.gameObject.SetActive(false);
 
-        NewGame();
+        //NewGame();
     }
 
     public void GhostEaten(Ghost ghost)
@@ -107,7 +113,9 @@ public class GameManager : MonoBehaviour
     {
         pacmanEaten = true;
         reward = -1;
-        //GameOver();
+        GameOver();
+        gridEnvironment.Reset();
+        
     }
 
     public void SetScore(int score)
@@ -124,8 +132,9 @@ public class GameManager : MonoBehaviour
         {
             // Tell IA it won
             reward = 1;
-            Movement.stopMoving();
+            //Movement.stopMoving();
             GameOver();
+            gridEnvironment.Reset();
         }
     }
 
@@ -145,6 +154,8 @@ public class GameManager : MonoBehaviour
 
     public bool HasRemainingPellets()
     {
+        if(NbPelletRemaining() == 0)
+            gameWon++;
         return NbPelletRemaining() != 0;
     }
 

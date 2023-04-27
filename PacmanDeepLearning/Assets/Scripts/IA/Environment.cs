@@ -70,11 +70,12 @@ public abstract class Environment : MonoBehaviour {
 		}
 
 		reward = 0;
-		actions = agent.GetAction ();
+		actions = agent.GetAction (collectState());
 		framesSinceAction = 0;
 
 		int sendAction = Mathf.FloorToInt(actions [0]);
 		MiddleStep (sendAction);
+		//EndStep();
 
 		StartCoroutine (WaitStep ());
 
@@ -101,6 +102,7 @@ public abstract class Environment : MonoBehaviour {
 	}
 
 	public virtual void Reset() {
+		agent.Train();
 		reward = 0;
 		currentStep = 0;
 		episodeCount++;
@@ -118,16 +120,15 @@ public abstract class Environment : MonoBehaviour {
 	}
 
 	public virtual void RunMdp() {
-
 		if ((Input.GetKeyDown("r")))
 			Reset();
-		if (acceptingSteps == true) {
+		
 			if (done == false) {
 				Step ();
 			} 
 			else {
 				Reset ();
 			}
-		}
+		
 	}
 }
