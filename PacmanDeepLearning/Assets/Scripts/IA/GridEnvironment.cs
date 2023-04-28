@@ -13,8 +13,6 @@ public class GridEnvironment : Environment
 
     public LayerMask pelletLayer;
 
-    Vector3 lastPosition;
-
     public Node currentNode;
     
     int nbPellets;
@@ -22,9 +20,8 @@ public class GridEnvironment : Environment
     void Start()
     {
         maxSteps = 100000;
-        waitTime = 0.1f;
+        waitTime = 0.01f;
         BeginNewGame();
-        lastPosition = gameManager.positionStart;
         nbPellets = gameManager.nbPellet();
         currentNode = gameManager.pacman.currentNode;
     }
@@ -96,7 +93,7 @@ public class GridEnvironment : Environment
         RaycastHit2D hit = Physics2D.BoxCast(gameManager.pacman.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.up, 1.0f, this.pelletLayer);
         if (hit.collider == null)
         {
-            states.Add(0);
+            states.Add(1);
         }
         else{
             states.Add(0);
@@ -105,7 +102,7 @@ public class GridEnvironment : Environment
         hit = Physics2D.BoxCast(gameManager.pacman.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.down, 1.0f, this.pelletLayer);
         if (hit.collider == null)
         {
-            states.Add(0);
+            states.Add(1);
         }
         else{
             states.Add(0);
@@ -114,7 +111,7 @@ public class GridEnvironment : Environment
         hit = Physics2D.BoxCast(gameManager.pacman.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.left, 1.0f, this.pelletLayer);
         if (hit.collider == null)
         {
-            states.Add(0);
+            states.Add(1);
         }
         else{
             states.Add(0);
@@ -123,7 +120,7 @@ public class GridEnvironment : Environment
         hit = Physics2D.BoxCast(gameManager.pacman.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.right, 1.0f, this.pelletLayer);
         if (hit.collider == null)
         {
-            states.Add(0);
+            states.Add(1);
         }
         else{
             states.Add(0);
@@ -220,7 +217,7 @@ public class GridEnvironment : Environment
                 //reward = -0.1f;
             }
                 
-            else  
+            else 
                 visualAgent.movement.SetDirection(Vector2.right);
         }
 
@@ -250,12 +247,8 @@ public class GridEnvironment : Environment
                 visualAgent.movement.SetDirection(newDirection);
                 //reward = -0.1f;
             }
-            else 
+            else
                 visualAgent.movement.SetDirection(Vector2.down);
         }
-        /*if(visualAgent.transform.position.x == lastPosition.x && visualAgent.transform.position.y == lastPosition.y){
-            reward = -0.5f;
-        }*/
-        lastPosition = visualAgent.transform.position;
     }
 }

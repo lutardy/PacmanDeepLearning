@@ -3169,6 +3169,9 @@ MonoBehaviour:
   - {fileID: 1419606505}
   visualAgent: {fileID: 679538733}
   gameManager: {fileID: 1477312994}
+  pelletLayer:
+    serializedVersion: 2
+    m_Bits: 256
   currentNode: {fileID: 0}
 --- !u!156049354 &1597730589
 Grid:
